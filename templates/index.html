@@ -1,23 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ scripts_folder }}/style.css">
-    <title>My Static Site</title>
-</head>
-<body>
-    <header>
-        <h1>Welcome to My Static Site</h1>
-    </header>
-    
-    <main>
-        {{ content | safe }}
-    </main>
+{% extends 'base.html' %}
 
-    <footer>
-        <p>© 2024 My Static Site</p>
-        <script src="{{ scripts_folder }}/app.js"></script>
-    </footer>
-</body>
-</html>
+{% block title %}
+    {% if title %}
+        {{ title }}
+    {% else %}
+        Python SSG
+    {% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+
+<main>
+    <p>{{ content | safe }}</p>
+</main>
+{% endblock %}
+

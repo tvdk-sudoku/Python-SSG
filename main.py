@@ -17,6 +17,7 @@ TODO:
 
 '''
 
+
 import os
 import re
 import shutil
@@ -55,6 +56,15 @@ def extract_template(metadata):
             return match.group(1)
     return 'default'  # Default template if none specified
 
+# Function to extract title from metadata
+def extract_title(metadata):
+    if metadata:
+        title_pattern = r'title:\s*[\'"]([^\'"]+)[\'"]'
+        match = re.search(title_pattern, metadata)
+        if match:
+            return match.group(1)
+    return ''  # Default title if none specified
+
 # Function to check if the file is marked as draft
 def is_draft(metadata):
     draft_pattern = r'draft:\s*true'
@@ -75,6 +85,9 @@ def process_markdown_file(md_file_path, output_file_path):
 
     # Parse frontmatter metadata and markdown content
     metadata, markdown_content = parse_frontmatter(md_content)
+
+    # Extract the title from the metadata
+    title = extract_title(metadata)
 
     # Check if the file is a draft
     if is_draft(metadata):
@@ -102,8 +115,8 @@ def process_markdown_file(md_file_path, output_file_path):
     # Load the corresponding HTML template
     template = load_template(template_name)
 
-    # Render the final HTML with the template, inserting the HTML content
-    final_html = template.render(content=html_content, scripts_folder=SCRIPT_FOLDER)
+    # Render the final HTML with the template, inserting the HTML content and title
+    final_html = template.render(content=html_content, title=title, scripts_folder=SCRIPT_FOLDER)
 
     # Write the final HTML to the output file
     with open(output_file_path, 'w', encoding='utf-8') as f:

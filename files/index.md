@@ -1,5 +1,6 @@
 ---
 template: "index"
+title: "Python SSG"
 ---
 
 # Welcome to SSG v2
