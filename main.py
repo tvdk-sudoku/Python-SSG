@@ -18,6 +18,7 @@ TODO:
 '''
 
 
+
 import os
 import re
 import shutil
@@ -70,6 +71,40 @@ def is_draft(metadata):
     draft_pattern = r'draft:\s*true'
     return metadata and re.search(draft_pattern, metadata, re.IGNORECASE)
 
+# Function to generate Table of Contents (ToC) and modify headings to add anchor links
+def generate_toc(content):
+    toc = []
+    heading_pattern = re.compile(r'^(#{1,6})\s*(.*)', re.MULTILINE)
+    anchor_id = 0
+
+    def heading_replacement(match):
+        nonlocal anchor_id
+        heading_level = len(match.group(1))  # Number of # symbols
+        heading_text = match.group(2).strip()  # Heading text
+        anchor_name = f'heading-{anchor_id}'  # Generate a unique anchor ID
+        anchor_id += 1
+        # Add to the ToC list with proper indentation
+        toc.append((heading_level, heading_text, anchor_name))
+        # Return the modified heading with the anchor link
+        return f'<h{heading_level} id="{anchor_name}">{heading_text}</h{heading_level}>'
+
+    # Replace headings in content and generate ToC
+    modified_content = re.sub(heading_pattern, heading_replacement, content)
+
+    # Create ToC HTML
+    toc_html = '<nav class="toc">\n<ol>\n'
+    current_level = 1
+    for level, text, anchor in toc:
+        if level > current_level:
+            toc_html += '<ol>\n' * (level - current_level)
+        elif level < current_level:
+            toc_html += '</ol>\n' * (current_level - level)
+        toc_html += f'<li><a href="#{anchor}">{text}</a></li>\n'
+        current_level = level
+    toc_html += '</ol>\n</nav>\n'
+
+    return toc_html, modified_content
+
 # Function to load the HTML template
 def load_template(template_name):
     try:
@@ -92,6 +127,7 @@ def process_markdown_file(md_file_path, output_file_path):
     # Check if the file is a draft
     if is_draft(metadata):
         html_content = "<h1>This page is a draft</h1><p>This content is currently unavailable.</p>"
+        toc_html = ''
     else:
         # Convert markdown links to HTML links
         markdown_content = convert_md_links_to_html(markdown_content)
@@ -107,6 +143,10 @@ def process_markdown_file(md_file_path, output_file_path):
                 return f'<pre><code>{code_content}</code></pre>'
         markdown_content = re.sub(code_block_pattern, code_block_replacement, markdown_content, flags=re.DOTALL)
 
+        # Generate ToC and modified content with anchor links
+        toc_html, markdown_content = generate_toc(markdown_content)
+
+        # Convert markdown to HTML
         html_content = markdown.markdown(markdown_content)
 
     # Extract the template name from the metadata
@@ -115,8 +155,8 @@ def process_markdown_file(md_file_path, output_file_path):
     # Load the corresponding HTML template
     template = load_template(template_name)
 
-    # Render the final HTML with the template, inserting the HTML content and title
-    final_html = template.render(content=html_content, title=title, scripts_folder=SCRIPT_FOLDER)
+    # Render the final HTML with the template, inserting the HTML content, ToC, and title
+    final_html = template.render(content=html_content, toc=toc_html, title=title, scripts_folder=SCRIPT_FOLDER)
 
     # Write the final HTML to the output file
     with open(output_file_path, 'w', encoding='utf-8') as f:
