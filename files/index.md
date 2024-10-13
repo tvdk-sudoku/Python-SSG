@@ -1,7 +1,15 @@
+---
+template: "index"
+---
+
 # Welcome to SSG v2
 
 ## Overview
 This is the index page for the Static Site Generator (SSG) version 2 project. Here you will find links to various sections of the documentation and project resources.
+
+## Pages
+- [test1](test1.md)
+- [draft](draft.md)
 
 ## Table of Contents
 
