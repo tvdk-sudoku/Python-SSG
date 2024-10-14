@@ -3,13 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./{{ scripts_folder }}/base.css">
+    <link rel="stylesheet" href="../scripts/base.css">
     <title>{% block title %}Python SSG{% endblock %}</title>
 </head>
 <body>
-    {{ scripts_folder }}
     
-    {% block content %} {% endblock %}
+    <grid class="container">
+        <header>
+            <h1>{{ title }}</h1>
+        </header>
+        <aside class="toc">
+            <h2>Table of contents</h2>
+            {{ toc }}
+        </aside>
+        <main class="content">
+            {% block content %} {% endblock %}
+        </main>
+
+        
+        
+    </grid>
+
+
+
 
 
     {% include 'footer.html' %}

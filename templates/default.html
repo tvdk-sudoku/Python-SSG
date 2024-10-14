@@ -14,19 +14,9 @@
 
 
 {% block content %}
-<grid class="container">
-    <header>
-        <h1>{{ title }}</h1>
-    </header>
-    <aside class="toc">
-        <h2>Table of contents</h2>
-        {{ toc }}
-    </aside>
-    <main>
-        <p>{{ content | safe }}</p>
-    </main>
+<p>{{ content | safe }}</p>
 
-    
-</grid>
+
+
 {% endblock %}
 
