@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ scripts_folder }}/style.css">
+    <link rel="stylesheet" href="./{{ scripts_folder }}/base.css">
     <title>{% block title %}Python SSG{% endblock %}</title>
 </head>
 <body>
+    {{ scripts_folder }}
     
     {% block content %} {% endblock %}
 

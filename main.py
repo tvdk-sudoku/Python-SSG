@@ -92,7 +92,7 @@ def generate_toc(content):
     modified_content = re.sub(heading_pattern, heading_replacement, content)
 
     # Create ToC HTML
-    toc_html = '<nav class="toc">\n<ol>\n'
+    toc_html = '<div class="toc">\n<ol>\n'
     current_level = 1
     for level, text, anchor in toc:
         if level > current_level:
@@ -101,7 +101,7 @@ def generate_toc(content):
             toc_html += '</ol>\n' * (current_level - level)
         toc_html += f'<li><a href="#{anchor}">{text}</a></li>\n'
         current_level = level
-    toc_html += '</ol>\n</nav>\n'
+    toc_html += '</ol>\n</div>\n'
 
     return toc_html, modified_content
 
