@@ -1,24 +1,3 @@
-r'''
-Activate venv: .\venv\Scripts\activate
-
-
-TODO:
-- Add syntax highlighting to code blocks
-- Add a CSS file to style the HTML output
-- Add a table of contents to the HTML output
-- Add a navigation bar to the HTML output
-- Add a footer to the HTML output
-- Add a title to the HTML output
-
-
-
-
-
-
-'''
-
-
-
 import os
 import re
 import shutil
@@ -92,7 +71,7 @@ def generate_toc(content):
     modified_content = re.sub(heading_pattern, heading_replacement, content)
 
     # Create ToC HTML
-    toc_html = '<div class="toc">\n<ol>\n'
+    toc_html = '<nav class="toc">\n<ol>\n'
     current_level = 1
     for level, text, anchor in toc:
         if level > current_level:
@@ -101,7 +80,7 @@ def generate_toc(content):
             toc_html += '</ol>\n' * (current_level - level)
         toc_html += f'<li><a href="#{anchor}">{text}</a></li>\n'
         current_level = level
-    toc_html += '</ol>\n</div>\n'
+    toc_html += '</ol>\n</nav>\n'
 
     return toc_html, modified_content
 
@@ -151,7 +130,6 @@ def process_markdown_file(md_file_path, output_file_path):
 
     # Extract the template name from the metadata
     template_name = extract_template(metadata)
-    
 
     # Load the corresponding HTML template
     template = load_template(template_name)
@@ -184,11 +162,26 @@ def process_folder(input_folder, output_folder):
             output_file_path = os.path.join(target_folder, file)
             handle_file_conversion(input_file_path, output_file_path)
 
+# Function to copy the scripts folder
+def copy_scripts_folder(scripts_folder, output_folder):
+    try:
+        shutil.copytree(scripts_folder, os.path.join(output_folder, 'scripts'))
+        print(f"Copied scripts folder to {output_folder}")
+    except FileExistsError:
+        print(f"Scripts folder already exists in {output_folder}")
+    except Exception as e:
+        print(f"Error copying scripts folder: {e}")
+
 # Main function to run the SSG
-def run_ssg(input_folder=INPUT_FOLDER, output_folder=OUTPUT_FOLDER):
+def run_ssg(input_folder=INPUT_FOLDER, output_folder=OUTPUT_FOLDER, scripts_folder=SCRIPT_FOLDER):
     if os.path.exists(output_folder):
         shutil.rmtree(output_folder)
     os.makedirs(output_folder, exist_ok=True)
+
+    # Copy the scripts folder to the output directory
+    copy_scripts_folder(scripts_folder, output_folder)
+
+    # Process the input folder
     process_folder(input_folder, output_folder)
 
 # Uncomment below line to run the script in a local environment
