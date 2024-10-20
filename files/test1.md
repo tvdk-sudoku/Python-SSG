@@ -1,3 +1,7 @@
+---
+template: "default"
+---
+
 # Sample Document
 
 ## Introduction

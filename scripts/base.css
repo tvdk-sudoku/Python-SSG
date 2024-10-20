@@ -15,6 +15,8 @@ aside.toc {
 
 main.content {
     margin-left: 250px; /* Same as the width of the aside */
-    padding: 10px; /* Optional: padding */
+    padding: 20px; /* Optional: padding */
     flex-grow: 1;
 }
+
+

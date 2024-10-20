@@ -151,7 +151,7 @@ def process_markdown_file(md_file_path, output_file_path):
 
     # Extract the template name from the metadata
     template_name = extract_template(metadata)
-    print(template_name)
+    
 
     # Load the corresponding HTML template
     template = load_template(template_name)
